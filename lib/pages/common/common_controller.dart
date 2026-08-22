@@ -44,8 +44,18 @@ abstract class CommonController extends GetxController {
       LoadingState response = await customGetData();
       if (response is Success) {
         List<Datum> dataList = response.response;
-        firstItem ??= dataList.firstOrNull?.id.toString();
-        lastItem = dataList.lastOrNull?.id.toString();
+        final validIds = dataList
+            .map((data) => data.id)
+            .where((id) => id != null)
+            .map((id) => id.toString())
+            .where((id) => id.isNotEmpty && id != 'null')
+            .toList();
+        if (validIds.isNotEmpty) {
+          firstItem ??= validIds.first;
+          lastItem = validIds.last;
+        } else {
+          lastItem = null;
+        }
         List<Datum>? responseList = handleResponse(dataList);
         if (responseList != null) {
           dataList = responseList;

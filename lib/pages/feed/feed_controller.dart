@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:get/get.dart';
 
 import '../../logic/model/fav_history/fav_history.dart';
@@ -7,6 +5,7 @@ import '../../logic/model/feed/datum.dart';
 import '../../logic/model/feed/user_action.dart';
 import '../../logic/model/feed_article/feed_article.dart';
 import '../../logic/network/network_repo.dart';
+import '../../logic/parsing/feed_article_parser.dart';
 import '../../logic/state/loading_state.dart';
 import '../../pages/common/common_controller.dart';
 import '../../pages/feed/feed_page.dart' show ReplySortType;
@@ -65,12 +64,10 @@ class FeedController extends CommonController {
         await NetworkRepo.getDataFromUrl(url: '/v6/feed/detail?id=$id');
     if (response is Success) {
       Datum data = (response.response as Datum);
-      if (data.messageRawOutput != 'null') {
-        List<dynamic> jsonList = jsonDecode(data.messageRawOutput!);
-        articleList = jsonList
-            .map((json) => FeedArticle.fromJson(json))
-            .where((item) => ['text', 'image', 'shareUrl'].contains(item.type))
-            .toList();
+      final List<FeedArticle>? parsedArticles =
+          parseFeedArticleBody(data.messageRawOutput);
+      if (parsedArticles != null) {
+        articleList = parsedArticles;
         if (!data.title.isNullOrEmpty) {
           articleList!.insert(0, FeedArticle(type: 'title', title: data.title));
         }
@@ -82,6 +79,9 @@ class FeedController extends CommonController {
             .where((item) => item.type == 'image')
             .map((item) => item.url.orEmpty)
             .toList();
+      } else {
+        articleList = null;
+        articleImgList = null;
       }
       if (!data.topReplyRows.isNullOrEmpty) {
         topReply = data.topReplyRows![0];
