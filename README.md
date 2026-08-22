@@ -27,7 +27,16 @@ Xcode 26 is required.
 flutter pub get
 flutter analyze
 flutter test
-flutter build ipa --release --no-codesign
+flutter build ios --release --no-codesign --config-only
+(cd ios && pod install)
+xcodebuild archive \
+  -workspace ios/Runner.xcworkspace \
+  -scheme Runner \
+  -configuration Release \
+  -sdk iphoneos \
+  -destination 'generic/platform=iOS' \
+  -archivePath build/ios/archive/Runner.xcarchive \
+  CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=
 ./scripts/package_unsigned_ipa.sh
 ```
 

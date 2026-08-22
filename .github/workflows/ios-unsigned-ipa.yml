@@ -63,26 +63,27 @@ jobs:
       - name: Test
         run: flutter test
 
-      - name: Build unsigned iOS app
-        shell: bash
+      - name: Prepare unsigned iOS build
         run: |
-          set +e
-          flutter build ipa --release --no-codesign
-          flutter_status=$?
-          set -e
+          flutter build ios --release --no-codesign --config-only
+          cd ios
+          pod install
 
-          shopt -s nullglob
-          apps=(build/ios/archive/Runner.xcarchive/Products/Applications/*.app)
-          if [[ ${#apps[@]} -ne 1 ]]; then
-            echo "Expected one app in the completed Xcode archive, found ${#apps[@]}." >&2
-            if [[ $flutter_status -ne 0 ]]; then
-              exit "$flutter_status"
-            fi
-            exit 1
-          fi
-          if [[ $flutter_status -ne 0 ]]; then
-            echo "::notice::Flutter returned $flutter_status after Xcode completed the unsigned archive; continuing with ${apps[0]}."
-          fi
+      - name: Archive unsigned iOS app
+        run: |
+          xcodebuild archive \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/ios/archive/Runner.xcarchive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY= \
+            DEVELOPMENT_TEAM= \
+            PROVISIONING_PROFILE_SPECIFIER= \
+            COMPILER_INDEX_STORE_ENABLE=NO
 
       - name: Package and validate unsigned IPA
         run: bash scripts/package_unsigned_ipa.sh
