@@ -1,9 +1,16 @@
 #!/bin/bash
 set -euo pipefail
 
-readonly APP_DIR="build/ios/iphoneos"
+readonly ARCHIVE_APP_DIR="build/ios/archive/Runner.xcarchive/Products/Applications"
+readonly DEVICE_APP_DIR="build/ios/iphoneos"
 readonly OUTPUT_DIR="build/ios/ipa"
 readonly OUTPUT_IPA="${OUTPUT_DIR}/c001apk-flutter-unsigned.ipa"
+
+if [[ -d "${ARCHIVE_APP_DIR}" ]]; then
+  readonly APP_DIR="${ARCHIVE_APP_DIR}"
+else
+  readonly APP_DIR="${DEVICE_APP_DIR}"
+fi
 
 apps=()
 while IFS= read -r candidate; do

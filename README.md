@@ -27,7 +27,7 @@ Xcode 26 is required.
 flutter pub get
 flutter analyze
 flutter test
-flutter build ios --release --no-codesign
+flutter build ipa --release --no-codesign
 ./scripts/package_unsigned_ipa.sh
 ```
 
