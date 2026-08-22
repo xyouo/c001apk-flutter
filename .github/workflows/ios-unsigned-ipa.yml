@@ -92,6 +92,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ios-unsigned-ipa
-          path: build/ios/ipa/c001apk-flutter-unsigned.ipa
+          path: |
+            build/ios/ipa/c001apk-flutter-unsigned.ipa
+            pubspec.lock
           if-no-files-found: error
           retention-days: 14
