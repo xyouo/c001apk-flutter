@@ -28,11 +28,12 @@ class AppPages {
   static GetPage _getPage({
     required String name,
     required Widget Function() page,
+    Transition transition = Transition.native,
   }) {
     return GetPage(
       name: name,
       page: page,
-      transition: Transition.native,
+      transition: transition,
     );
   }
 
@@ -56,6 +57,7 @@ class AppPages {
     _getPage(
       name: '/feed/:id',
       page: () => const FeedPage(),
+      transition: Transition.fadeIn,
     ),
     _getPage(
       name: '/u/:uid',
