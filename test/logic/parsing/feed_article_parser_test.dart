@@ -28,14 +28,43 @@ void main() {
       expect(result.first.message, 'hello');
     });
 
-    test('accepts a valid empty list', () {
-      expect(parseFeedArticleBody('[]'), isEmpty);
+    test('falls back to the plain feed layout for an empty article list', () {
+      expect(parseFeedArticleBody('[]'), isNull);
+    });
+
+    test('falls back when no supported article entries remain', () {
+      expect(
+        parseFeedArticleBody('[{"type":"unsupported","message":"ignored"}]'),
+        isNull,
+      );
     });
 
     test('falls back when a supported field has the wrong type', () {
       expect(
         parseFeedArticleBody('[{"type":"text","message":42}]'),
         isNull,
+      );
+    });
+  });
+
+  group('parseStructuredFeedBody', () {
+    const body = '[{"type":"text","message":"article body"}]';
+
+    test('ordinary feeds always use their plain message and image fields', () {
+      expect(
+        parseStructuredFeedBody(feedType: 'feed', rawBody: body),
+        isNull,
+      );
+    });
+
+    test('known structured feed types use the article payload', () {
+      expect(
+        parseStructuredFeedBody(feedType: 'feedArticle', rawBody: body),
+        hasLength(1),
+      );
+      expect(
+        parseStructuredFeedBody(feedType: 'trade', rawBody: body),
+        hasLength(1),
       );
     });
   });

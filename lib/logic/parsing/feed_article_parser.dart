@@ -2,6 +2,21 @@ import 'dart:convert';
 
 import '../model/feed_article/feed_article.dart';
 
+const _structuredFeedTypes = {'feedArticle', 'trade'};
+
+/// Selects the structured renderer only for feed types that actually use it.
+/// Ordinary feeds may still return `message_raw_output`, including `[]`, but
+/// their visible body lives in the `message` and `picArr` fields.
+List<FeedArticle>? parseStructuredFeedBody({
+  required String? feedType,
+  required String? rawBody,
+}) {
+  if (!_structuredFeedTypes.contains(feedType)) {
+    return null;
+  }
+  return parseFeedArticleBody(rawBody);
+}
+
 /// Parses the structured body returned by the feed detail endpoint.
 ///
 /// A null result means the payload cannot be rendered as a structured article
@@ -36,7 +51,7 @@ List<FeedArticle>? parseFeedArticleBody(String? rawBody) {
         articles.add(article);
       }
     }
-    return articles;
+    return articles.isEmpty ? null : articles;
   } on FormatException {
     return null;
   } on TypeError {

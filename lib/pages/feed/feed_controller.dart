@@ -65,11 +65,15 @@ class FeedController extends CommonController {
     if (response is Success) {
       Datum data = (response.response as Datum);
       final List<FeedArticle>? parsedArticles =
-          parseFeedArticleBody(data.messageRawOutput);
+          parseStructuredFeedBody(
+        feedType: data.feedType,
+        rawBody: data.messageRawOutput,
+      );
       if (parsedArticles != null) {
         articleList = parsedArticles;
-        if (!data.title.isNullOrEmpty) {
-          articleList!.insert(0, FeedArticle(type: 'title', title: data.title));
+        if (!data.messageTitle.isNullOrEmpty) {
+          articleList!
+              .insert(0, FeedArticle(type: 'title', title: data.messageTitle));
         }
         if (!data.messageCover.isNullOrEmpty) {
           articleList!
