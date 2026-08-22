@@ -61,7 +61,7 @@ class _BlackListPageState extends State<BlackListPage> {
             },
             decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: _type == BlackListType.user ? 'uid' : 'topic',
+              hintText: _type == BlackListType.user ? 'uid' : '话题',
               hintStyle: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.normal,
@@ -97,7 +97,7 @@ class _BlackListPageState extends State<BlackListPage> {
                         _clearStream.add(false);
                       },
                       icon: const Icon(Icons.clear),
-                      tooltip: 'Clear',
+                      tooltip: '清除',
                     )
                   : const SizedBox.shrink(),
             ),
@@ -124,7 +124,7 @@ class _BlackListPageState extends State<BlackListPage> {
                   ),
                 ),
                 icon: const Icon(Icons.clear_all),
-                tooltip: 'Clear All',
+                tooltip: '全部清除',
               ),
             IconButton(
               onPressed: () async {
@@ -158,7 +158,7 @@ class _BlackListPageState extends State<BlackListPage> {
                 }
               },
               icon: const Icon(Icons.file_upload_outlined),
-              tooltip: 'Export',
+              tooltip: '导出',
             ),
             IconButton(
               onPressed: () async {
@@ -182,7 +182,7 @@ class _BlackListPageState extends State<BlackListPage> {
                 _focusNode.requestFocus();
               },
               icon: const Icon(Icons.file_download_outlined),
-              tooltip: 'Import',
+              tooltip: '导入',
             ),
           ],
           bottom: const PreferredSize(
@@ -226,7 +226,7 @@ class _BlackListPageState extends State<BlackListPage> {
                 ),
               )
             : const Center(
-                child: Text('EMPTY'),
+                child: Text('暂无内容'),
               ),
       ),
     );

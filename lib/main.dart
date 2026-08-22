@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -89,6 +90,9 @@ class C001APKAPP extends StatelessWidget {
 
       return GetMaterialApp(
         title: 'c001apk',
+        locale: const Locale('zh', 'CN'),
+        supportedLocales: const [Locale('zh', 'CN')],
+        localizationsDelegates: GlobalMaterialLocalizations.delegates,
         theme: ThemeData(
           colorScheme: selectedTheme == 2 ? darkColorScheme : lightColorScheme,
           useMaterial3: true,
