@@ -7,8 +7,13 @@ import '../../utils/global_data.dart';
 import '../../utils/storage_util.dart';
 import '../../utils/token_util.dart';
 
+typedef AppTokenFactory = String Function(String deviceCode);
+
 class ApiInterceptor extends Interceptor {
-  String? _token;
+  ApiInterceptor({AppTokenFactory? tokenFactory})
+      : _tokenFactory = tokenFactory ?? TokenUtils.getTokenV2;
+
+  final AppTokenFactory _tokenFactory;
   String? _xAppDevice;
   String? _userAgent;
   String? _sdkInt;
@@ -41,7 +46,7 @@ class ApiInterceptor extends Interceptor {
   }
 
   String get token {
-    return _token ??= TokenUtils.getTokenV2(xAppDevice);
+    return _tokenFactory(xAppDevice);
   }
 
   @override

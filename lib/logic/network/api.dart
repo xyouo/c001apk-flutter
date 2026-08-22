@@ -2,7 +2,7 @@ import '../../constants/constants.dart';
 
 class Api {
   static const String getHomeFeed =
-      '${Constants.URL_API2_SERVICE}/v6/main/indexV8';
+      '${Constants.URL_API_SERVICE}/v6/main/indexV8';
 
   static String getDataList = '${Constants.URL_API_SERVICE}/v6/page/dataList';
 

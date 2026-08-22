@@ -1,0 +1,77 @@
+name: iOS unsigned IPA
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/ios-unsigned-ipa.yml'
+      - 'assets/**'
+      - 'ios/**'
+      - 'lib/**'
+      - 'scripts/package_unsigned_ipa.sh'
+      - 'test/**'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+  push:
+    branches: [master, main]
+    paths:
+      - '.github/workflows/ios-unsigned-ipa.yml'
+      - 'assets/**'
+      - 'ios/**'
+      - 'lib/**'
+      - 'scripts/package_unsigned_ipa.sh'
+      - 'test/**'
+      - 'pubspec.yaml'
+      - 'pubspec.lock'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-unsigned-ipa-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Flutter
+        # subosito/flutter-action v2.23.0
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
+        with:
+          flutter-version: '3.44.7'
+          channel: stable
+          cache: true
+
+      - name: Show toolchain versions
+        run: |
+          flutter --version
+          xcodebuild -version
+
+      - name: Resolve dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test
+
+      - name: Build unsigned iOS app
+        run: flutter build ios --release --no-codesign
+
+      - name: Package and validate unsigned IPA
+        run: bash scripts/package_unsigned_ipa.sh
+
+      - name: Upload unsigned IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-unsigned-ipa
+          path: build/ios/ipa/c001apk-flutter-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 14
