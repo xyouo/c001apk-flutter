@@ -57,7 +57,7 @@ class AppPages {
     _getPage(
       name: '/feed/:id',
       page: () => const FeedPage(),
-      transition: Transition.fadeIn,
+      transition: Transition.noTransition,
     ),
     _getPage(
       name: '/u/:uid',

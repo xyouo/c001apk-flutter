@@ -3,11 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 
 void main() {
-  test('feed detail does not slide horizontally into view', () {
+  test('feed detail does not reveal the previous page during transitions', () {
     final feedPage = AppPages.getPages.singleWhere(
       (page) => page.name == '/feed/:id',
     );
 
-    expect(feedPage.transition, Transition.fadeIn);
+    expect(feedPage.transition, Transition.noTransition);
   });
 }

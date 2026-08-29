@@ -137,12 +137,22 @@ class _MainPageState extends State<MainPage> {
                 ? StreamBuilder(
                     initialData: _selectedIndex,
                     stream: _indexSctream.stream,
-                    builder: (_, snapshot) => NavigationBar(
-                      destinations: barDestinations,
-                      selectedIndex: snapshot.data!,
-                      onDestinationSelected: onDestinationSelected,
-                      labelBehavior:
-                          NavigationDestinationLabelBehavior.onlyShowSelected,
+                    builder: (_, snapshot) => SafeArea(
+                      top: false,
+                      minimum: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                      child: Material(
+                        elevation: 8,
+                        borderRadius: BorderRadius.circular(28),
+                        clipBehavior: Clip.antiAlias,
+                        child: NavigationBar(
+                          height: 64,
+                          destinations: barDestinations,
+                          selectedIndex: snapshot.data!,
+                          onDestinationSelected: onDestinationSelected,
+                          labelBehavior: NavigationDestinationLabelBehavior
+                              .onlyShowSelected,
+                        ),
+                      ),
                     ),
                   )
                 : null,
