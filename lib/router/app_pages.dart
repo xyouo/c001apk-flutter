@@ -36,7 +36,7 @@ class AppPages {
       name: name,
       page: page,
       customTransition: _transition,
-      transitionDuration: const Duration(milliseconds: 180),
+      transitionDuration: const Duration(milliseconds: 300),
     );
   }
 

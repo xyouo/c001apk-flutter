@@ -20,13 +20,16 @@ class OpaqueContentTransition extends CustomTransition {
     return ColoredBox(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: FadeTransition(
-        opacity: Tween<double>(begin: 0.9, end: 1).animate(motion),
+        opacity: Tween<double>(begin: 0.65, end: 1).animate(motion),
         child: SlideTransition(
           position: Tween<Offset>(
-            begin: const Offset(0, 0.015),
+            begin: const Offset(0, 0.04),
             end: Offset.zero,
           ).animate(motion),
-          child: child,
+          child: ScaleTransition(
+            scale: Tween<double>(begin: 0.985, end: 1).animate(motion),
+            child: child,
+          ),
         ),
       ),
     );
