@@ -35,10 +35,8 @@ class AppPages {
     return GetPage(
       name: name,
       page: page,
-      transition: Transition.custom,
       customTransition: _transition,
       transitionDuration: const Duration(milliseconds: 180),
-      reverseTransitionDuration: const Duration(milliseconds: 150),
     );
   }
 
