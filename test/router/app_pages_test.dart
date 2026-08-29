@@ -19,7 +19,8 @@ void main() {
     }
   });
 
-  testWidgets('route content starts with perceptible motion', (tester) async {
+  testWidgets('route content uses a smooth horizontal transition',
+      (tester) async {
     final controller = AnimationController(
       vsync: tester,
       duration: const Duration(milliseconds: 300),
@@ -47,10 +48,9 @@ void main() {
 
     final fade = tester.widget<FadeTransition>(find.byType(FadeTransition));
     final slide = tester.widget<SlideTransition>(find.byType(SlideTransition));
-    final scale = tester.widget<ScaleTransition>(find.byType(ScaleTransition));
 
-    expect(fade.opacity.value, closeTo(0.65, 0.001));
-    expect(slide.position.value, const Offset(0, 0.04));
-    expect(scale.scale.value, closeTo(0.985, 0.001));
+    expect(fade.opacity.value, closeTo(0.88, 0.001));
+    expect(slide.position.value, const Offset(0.08, 0));
+    expect(find.byType(ScaleTransition), findsNothing);
   });
 }
