@@ -41,7 +41,7 @@ xcodebuild archive \
 ```
 
 The resulting file is written to
-`build/ios/ipa/c001apk-flutter-unsigned.ipa`. It is an unsigned development
+`build/ios/ipa/c001apk-flutter.ipa`. It is an unsigned development
 artifact, not an App Store package, and must be signed before installation on
 a physical device. The same build is available from the GitHub Actions run as
-the `ios-unsigned-ipa` artifact.
+the `ios-ipa` artifact.

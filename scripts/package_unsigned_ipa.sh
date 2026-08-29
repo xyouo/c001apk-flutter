@@ -4,7 +4,7 @@ set -euo pipefail
 readonly ARCHIVE_APP_DIR="build/ios/archive/Runner.xcarchive/Products/Applications"
 readonly DEVICE_APP_DIR="build/ios/iphoneos"
 readonly OUTPUT_DIR="build/ios/ipa"
-readonly OUTPUT_IPA="${OUTPUT_DIR}/c001apk-flutter-unsigned.ipa"
+readonly OUTPUT_IPA="${OUTPUT_DIR}/c001apk-flutter.ipa"
 
 if [[ -d "${ARCHIVE_APP_DIR}" ]]; then
   readonly APP_DIR="${ARCHIVE_APP_DIR}"
@@ -55,4 +55,4 @@ if grep -Eq '(^|/)embedded\.mobileprovision$' <<< "${ipa_entries}"; then
   exit 1
 fi
 
-echo "Created unsigned IPA: ${OUTPUT_IPA}"
+echo "Created IPA: ${OUTPUT_IPA}"
