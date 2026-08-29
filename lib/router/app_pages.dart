@@ -23,17 +23,22 @@ import '../pages/settings/params_page.dart';
 import '../pages/topic/topic_page.dart';
 import '../pages/user/user_page.dart';
 import '../pages/webview/webview_page.dart';
+import 'opaque_content_transition.dart';
 
 class AppPages {
+  static final _transition = OpaqueContentTransition();
+
   static GetPage _getPage({
     required String name,
     required Widget Function() page,
-    Transition transition = Transition.noTransition,
   }) {
     return GetPage(
       name: name,
       page: page,
-      transition: transition,
+      transition: Transition.custom,
+      customTransition: _transition,
+      transitionDuration: const Duration(milliseconds: 180),
+      reverseTransitionDuration: const Duration(milliseconds: 150),
     );
   }
 

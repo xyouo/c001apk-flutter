@@ -25,6 +25,7 @@ class _MainPageState extends State<MainPage> {
       Get.put(ReturnTopController(), tag: 'home');
   int _selectedIndex = 0;
   late final MainController _mainController = Get.put(MainController());
+  final PageController _pageController = PageController();
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void dispose() async {
+    _pageController.dispose();
     await GStorage.close();
     Get.delete<ReturnTopController>(tag: 'home');
     Get.delete<MainController>();
@@ -119,8 +121,14 @@ class _MainPageState extends State<MainPage> {
                   onDestinationSelected: onDestinationSelected,
                 ),
               Expanded(
-                child: IndexedStack(
-                  index: _selectedIndex,
+                child: PageView(
+                  controller: _pageController,
+                  physics: const BouncingScrollPhysics(),
+                  onPageChanged: (index) {
+                    if (index != _selectedIndex) {
+                      setState(() => _selectedIndex = index);
+                    }
+                  },
                   children: pages,
                 ),
               ),
@@ -128,19 +136,25 @@ class _MainPageState extends State<MainPage> {
             bottomNavigationBar: isPortait
                 ? SafeArea(
                     top: false,
-                    minimum: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-                    child: Material(
-                      elevation: 8,
-                      surfaceTintColor: Colors.transparent,
-                      borderRadius: BorderRadius.circular(28),
-                      clipBehavior: Clip.antiAlias,
-                      child: NavigationBar(
-                        height: 64,
-                        destinations: barDestinations,
-                        selectedIndex: _selectedIndex,
-                        onDestinationSelected: onDestinationSelected,
-                        labelBehavior:
-                            NavigationDestinationLabelBehavior.onlyShowSelected,
+                    minimum: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+                    child: Align(
+                      heightFactor: 1,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 360),
+                        child: Material(
+                          elevation: 6,
+                          surfaceTintColor: Colors.transparent,
+                          borderRadius: BorderRadius.circular(24),
+                          clipBehavior: Clip.antiAlias,
+                          child: NavigationBar(
+                            height: 56,
+                            destinations: barDestinations,
+                            selectedIndex: _selectedIndex,
+                            onDestinationSelected: onDestinationSelected,
+                            labelBehavior: NavigationDestinationLabelBehavior
+                                .onlyShowSelected,
+                          ),
+                        ),
                       ),
                     ),
                   )
@@ -156,6 +170,13 @@ class _MainPageState extends State<MainPage> {
       _pageScrollController.setIndex(998);
       return;
     }
-    setState(() => _selectedIndex = index);
+    if (index != _selectedIndex) {
+      setState(() => _selectedIndex = index);
+      _pageController.animateToPage(
+        index,
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOutCubic,
+      );
+    }
   }
 }
