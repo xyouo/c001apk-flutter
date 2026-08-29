@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:android_intent_plus/android_intent.dart';
@@ -25,9 +24,7 @@ class _MainPageState extends State<MainPage> {
   final ReturnTopController _pageScrollController =
       Get.put(ReturnTopController(), tag: 'home');
   int _selectedIndex = 0;
-  final _indexSctream = StreamController<int>.broadcast();
   late final MainController _mainController = Get.put(MainController());
-  final _contrller = PageController();
 
   @override
   void initState() {
@@ -72,17 +69,17 @@ class _MainPageState extends State<MainPage> {
       NavigationDestination(
         selectedIcon: Icon(Icons.home),
         icon: Icon(Icons.home_outlined),
-        label: 'Home',
+        label: '首页',
       ),
       NavigationDestination(
         selectedIcon: Icon(Icons.message),
         icon: Icon(Icons.message_outlined),
-        label: 'Message',
+        label: '消息',
       ),
       NavigationDestination(
         selectedIcon: Icon(Icons.settings),
         icon: Icon(Icons.settings_outlined),
-        label: 'Settings',
+        label: '设置',
       ),
     ];
 
@@ -90,17 +87,17 @@ class _MainPageState extends State<MainPage> {
       NavigationRailDestination(
         selectedIcon: Icon(Icons.home),
         icon: Icon(Icons.home_outlined),
-        label: Text('Home'),
+        label: Text('首页'),
       ),
       NavigationRailDestination(
         selectedIcon: Icon(Icons.message),
         icon: Icon(Icons.message_outlined),
-        label: Text('Message'),
+        label: Text('消息'),
       ),
       NavigationRailDestination(
         selectedIcon: Icon(Icons.settings),
         icon: Icon(Icons.settings_outlined),
-        label: Text('Settings'),
+        label: Text('设置'),
       ),
     ];
 
@@ -116,42 +113,34 @@ class _MainPageState extends State<MainPage> {
           return Scaffold(
             body: Row(children: [
               if (!isPortait)
-                StreamBuilder(
-                  initialData: _selectedIndex,
-                  stream: _indexSctream.stream,
-                  builder: (_, snapshot) => NavigationRail(
-                    destinations: railDestinations,
-                    selectedIndex: snapshot.data,
-                    onDestinationSelected: onDestinationSelected,
-                  ),
+                NavigationRail(
+                  destinations: railDestinations,
+                  selectedIndex: _selectedIndex,
+                  onDestinationSelected: onDestinationSelected,
                 ),
               Expanded(
-                child: PageView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  controller: _contrller,
+                child: IndexedStack(
+                  index: _selectedIndex,
                   children: pages,
                 ),
               ),
             ]),
             bottomNavigationBar: isPortait
-                ? StreamBuilder(
-                    initialData: _selectedIndex,
-                    stream: _indexSctream.stream,
-                    builder: (_, snapshot) => SafeArea(
-                      top: false,
-                      minimum: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-                      child: Material(
-                        elevation: 8,
-                        borderRadius: BorderRadius.circular(28),
-                        clipBehavior: Clip.antiAlias,
-                        child: NavigationBar(
-                          height: 64,
-                          destinations: barDestinations,
-                          selectedIndex: snapshot.data!,
-                          onDestinationSelected: onDestinationSelected,
-                          labelBehavior: NavigationDestinationLabelBehavior
-                              .onlyShowSelected,
-                        ),
+                ? SafeArea(
+                    top: false,
+                    minimum: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                    child: Material(
+                      elevation: 8,
+                      surfaceTintColor: Colors.transparent,
+                      borderRadius: BorderRadius.circular(28),
+                      clipBehavior: Clip.antiAlias,
+                      child: NavigationBar(
+                        height: 64,
+                        destinations: barDestinations,
+                        selectedIndex: _selectedIndex,
+                        onDestinationSelected: onDestinationSelected,
+                        labelBehavior:
+                            NavigationDestinationLabelBehavior.onlyShowSelected,
                       ),
                     ),
                   )
@@ -165,13 +154,8 @@ class _MainPageState extends State<MainPage> {
   void onDestinationSelected(int index) {
     if (index == 0 && _selectedIndex == 0) {
       _pageScrollController.setIndex(998);
+      return;
     }
-    _contrller.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.ease,
-    );
-    _selectedIndex = index;
-    _indexSctream.add(index);
+    setState(() => _selectedIndex = index);
   }
 }

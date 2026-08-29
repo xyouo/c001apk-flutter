@@ -3,11 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 
 void main() {
-  test('feed detail does not reveal the previous page during transitions', () {
-    final feedPage = AppPages.getPages.singleWhere(
-      (page) => page.name == '/feed/:id',
-    );
-
-    expect(feedPage.transition, Transition.noTransition);
+  test('routes do not reveal the previous page during transitions', () {
+    for (final page in AppPages.getPages) {
+      expect(page.transition, Transition.noTransition, reason: page.name);
+    }
   });
 }

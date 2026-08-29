@@ -28,7 +28,7 @@ class AppPages {
   static GetPage _getPage({
     required String name,
     required Widget Function() page,
-    Transition transition = Transition.native,
+    Transition transition = Transition.noTransition,
   }) {
     return GetPage(
       name: name,
@@ -57,7 +57,6 @@ class AppPages {
     _getPage(
       name: '/feed/:id',
       page: () => const FeedPage(),
-      transition: Transition.noTransition,
     ),
     _getPage(
       name: '/u/:uid',
