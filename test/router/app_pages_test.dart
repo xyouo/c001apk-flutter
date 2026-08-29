@@ -27,15 +27,19 @@ void main() {
     addTearDown(controller.dispose);
 
     await tester.pumpWidget(
-      MaterialApp(
-        home: Builder(
-          builder: (context) => OpaqueContentTransition().buildTransition(
-            context,
-            Curves.linear,
-            null,
-            controller,
-            const AlwaysStoppedAnimation<double>(0),
-            const SizedBox(),
+      Directionality(
+        textDirection: TextDirection.ltr,
+        child: Theme(
+          data: ThemeData(),
+          child: Builder(
+            builder: (context) => OpaqueContentTransition().buildTransition(
+              context,
+              Curves.linear,
+              null,
+              controller,
+              const AlwaysStoppedAnimation<double>(0),
+              const SizedBox(),
+            ),
           ),
         ),
       ),
