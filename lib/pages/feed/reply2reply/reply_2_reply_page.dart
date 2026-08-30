@@ -53,43 +53,17 @@ class Reply2ReplyPage extends StatelessWidget {
                     uid: originReply.uid,
                     onReply: (id, uname, fid) async {
                       if (GlobalData().isLogin) {
-                        Navigator.of(context)
-                            .push(
-                          GetDialogRoute(
-                            pageBuilder:
-                                (buildContext, animation, secondaryAnimation) {
-                              return ReplyPage(
-                                type: ReplyType.reply,
-                                username: uname,
-                                id: id,
-                              );
-                            },
-                            transitionDuration:
-                                const Duration(milliseconds: 500),
-                            transitionBuilder: (context, animation,
-                                secondaryAnimation, child) {
-                              const begin = Offset(0.0, 1.0);
-                              const end = Offset.zero;
-                              const curve = Curves.linear;
-
-                              var tween = Tween(begin: begin, end: end)
-                                  .chain(CurveTween(curve: curve));
-
-                              return SlideTransition(
-                                position: animation.drive(tween),
-                                child: child,
-                              );
-                            },
+                        final result = await Get.to<dynamic>(
+                          () => ReplyPage(
+                            type: ReplyType.reply,
+                            username: uname,
+                            id: id,
                           ),
-                        )
-                            .then(
-                          (result) {
-                            if (result != null && result['data'] != null) {
-                              controller.updateReply(
-                                  result['data'] as Datum, id);
-                            }
-                          },
+                          transition: Transition.native,
                         );
+                        if (result != null && result['data'] != null) {
+                          controller.updateReply(result['data'] as Datum, id);
+                        }
                         // dynamic result = await showModalBottomSheet<dynamic>(
                         //   context: context,
                         //   isScrollControlled: true,

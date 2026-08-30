@@ -121,36 +121,16 @@ class _TopicPageState extends State<TopicPage> with TickerProviderStateMixin {
                   ? FloatingActionButton(
                       heroTag: null,
                       onPressed: () {
-                        Navigator.of(context).push(
-                          GetDialogRoute(
-                            pageBuilder:
-                                (buildContext, animation, secondaryAnimation) {
-                              return ReplyPage(
-                                targetType:
-                                    _topicController.entityType == 'topic'
-                                        ? 'tag'
-                                        : 'product_phone',
-                                targetId: _topicController.id,
-                                title: _topicController.title,
-                              );
-                            },
-                            transitionDuration:
-                                const Duration(milliseconds: 500),
-                            transitionBuilder: (context, animation,
-                                secondaryAnimation, child) {
-                              const begin = Offset(0.0, 1.0);
-                              const end = Offset.zero;
-                              const curve = Curves.linear;
-
-                              var tween = Tween(begin: begin, end: end)
-                                  .chain(CurveTween(curve: curve));
-
-                              return SlideTransition(
-                                position: animation.drive(tween),
-                                child: child,
-                              );
-                            },
+                        Get.to(
+                          () => ReplyPage(
+                            targetType:
+                                _topicController.entityType == 'topic'
+                                    ? 'tag'
+                                    : 'product_phone',
+                            targetId: _topicController.id,
+                            title: _topicController.title,
                           ),
+                          transition: Transition.native,
                         );
                         // showModalBottomSheet<dynamic>(
                         //   context: context,

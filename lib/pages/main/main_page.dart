@@ -67,20 +67,20 @@ class _MainPageState extends State<MainPage> {
       SettingsPage(),
     ];
 
-    const barDestinations = <NavigationDestination>[
-      NavigationDestination(
-        selectedIcon: Icon(Icons.home),
-        icon: Icon(Icons.home_outlined),
+    const barDestinations = <_CompactDestination>[
+      _CompactDestination(
+        selectedIcon: Icons.home,
+        icon: Icons.home_outlined,
         label: '首页',
       ),
-      NavigationDestination(
-        selectedIcon: Icon(Icons.message),
-        icon: Icon(Icons.message_outlined),
+      _CompactDestination(
+        selectedIcon: Icons.message,
+        icon: Icons.message_outlined,
         label: '消息',
       ),
-      NavigationDestination(
-        selectedIcon: Icon(Icons.settings),
-        icon: Icon(Icons.settings_outlined),
+      _CompactDestination(
+        selectedIcon: Icons.settings,
+        icon: Icons.settings_outlined,
         label: '设置',
       ),
     ];
@@ -136,23 +136,23 @@ class _MainPageState extends State<MainPage> {
             bottomNavigationBar: isPortait
                 ? SafeArea(
                     top: false,
-                    minimum: const EdgeInsets.fromLTRB(32, 0, 32, 8),
+                    minimum: const EdgeInsets.fromLTRB(36, 0, 36, 8),
                     child: Align(
                       heightFactor: 1,
                       child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 320),
+                        constraints: const BoxConstraints(maxWidth: 312),
                         child: Material(
-                          elevation: 6,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .surfaceContainer,
+                          elevation: 4,
                           surfaceTintColor: Colors.transparent,
-                          borderRadius: BorderRadius.circular(26),
+                          borderRadius: BorderRadius.circular(28),
                           clipBehavior: Clip.antiAlias,
-                          child: NavigationBar(
-                            height: 58,
+                          child: _CompactNavigationBar(
                             destinations: barDestinations,
                             selectedIndex: _selectedIndex,
                             onDestinationSelected: onDestinationSelected,
-                            labelBehavior:
-                                NavigationDestinationLabelBehavior.alwaysShow,
                           ),
                         ),
                       ),
@@ -174,9 +174,99 @@ class _MainPageState extends State<MainPage> {
       setState(() => _selectedIndex = index);
       _pageController.animateToPage(
         index,
-        duration: const Duration(milliseconds: 220),
-        curve: Curves.easeOutCubic,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.ease,
       );
     }
+  }
+}
+
+class _CompactDestination {
+  const _CompactDestination({
+    required this.icon,
+    required this.selectedIcon,
+    required this.label,
+  });
+
+  final IconData icon;
+  final IconData selectedIcon;
+  final String label;
+}
+
+class _CompactNavigationBar extends StatelessWidget {
+  const _CompactNavigationBar({
+    required this.destinations,
+    required this.selectedIndex,
+    required this.onDestinationSelected,
+  });
+
+  final List<_CompactDestination> destinations;
+  final int selectedIndex;
+  final ValueChanged<int> onDestinationSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return SizedBox(
+      height: 56,
+      child: Row(
+        children: List.generate(destinations.length, (index) {
+          final destination = destinations[index];
+          final selected = index == selectedIndex;
+
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(4),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 160),
+                curve: Curves.easeOutCubic,
+                decoration: BoxDecoration(
+                  color: selected
+                      ? colorScheme.secondaryContainer
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(22),
+                ),
+                child: Semantics(
+                  button: true,
+                  selected: selected,
+                  label: destination.label,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(22),
+                    onTap: () => onDestinationSelected(index),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          selected
+                              ? destination.selectedIcon
+                              : destination.icon,
+                          size: 21,
+                          color: selected
+                              ? colorScheme.primary
+                              : colorScheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(height: 1),
+                        Text(
+                          destination.label,
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: selected
+                                    ? colorScheme.primary
+                                    : colorScheme.onSurfaceVariant,
+                                fontWeight: selected
+                                    ? FontWeight.w600
+                                    : FontWeight.w500,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }),
+      ),
+    );
   }
 }

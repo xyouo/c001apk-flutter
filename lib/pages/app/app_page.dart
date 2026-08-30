@@ -127,33 +127,14 @@ class _AppPageState extends State<AppPage> with TickerProviderStateMixin {
               ? FloatingActionButton(
                   heroTag: null,
                   onPressed: () {
-                    Navigator.of(context).push(
-                      GetDialogRoute(
-                        pageBuilder:
-                            (buildContext, animation, secondaryAnimation) {
-                          return ReplyPage(
-                            title: controller.appName,
-                            targetType: 'apk',
-                            targetId:
-                                '${1000000000 + int.parse(controller.id ?? '4599')}',
-                          );
-                        },
-                        transitionDuration: const Duration(milliseconds: 500),
-                        transitionBuilder:
-                            (context, animation, secondaryAnimation, child) {
-                          const begin = Offset(0.0, 1.0);
-                          const end = Offset.zero;
-                          const curve = Curves.linear;
-
-                          var tween = Tween(begin: begin, end: end)
-                              .chain(CurveTween(curve: curve));
-
-                          return SlideTransition(
-                            position: animation.drive(tween),
-                            child: child,
-                          );
-                        },
+                    Get.to(
+                      () => ReplyPage(
+                        title: controller.appName,
+                        targetType: 'apk',
+                        targetId:
+                            '${1000000000 + int.parse(controller.id ?? '4599')}',
                       ),
+                      transition: Transition.native,
                     );
                     // showModalBottomSheet<dynamic>(
                     //   context: context,

@@ -129,28 +129,9 @@ class _HomeFeedPageState extends State<HomeFeedPage>
                   child: FloatingActionButton(
                     heroTag: null,
                     onPressed: () {
-                      Navigator.of(context).push(
-                        GetDialogRoute(
-                          pageBuilder:
-                              (buildContext, animation, secondaryAnimation) {
-                            return const ReplyPage();
-                          },
-                          transitionDuration: const Duration(milliseconds: 500),
-                          transitionBuilder:
-                              (context, animation, secondaryAnimation, child) {
-                            const begin = Offset(0.0, 1.0);
-                            const end = Offset.zero;
-                            const curve = Curves.linear;
-
-                            var tween = Tween(begin: begin, end: end)
-                                .chain(CurveTween(curve: curve));
-
-                            return SlideTransition(
-                              position: animation.drive(tween),
-                              child: child,
-                            );
-                          },
-                        ),
+                      Get.to(
+                        () => const ReplyPage(),
+                        transition: Transition.native,
                       );
                       // showModalBottomSheet<dynamic>(
                       //   context: context,
