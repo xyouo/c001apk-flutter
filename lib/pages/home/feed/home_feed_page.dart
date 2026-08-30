@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/src/dialog/dialog_route.dart';
 
 import '../../../components/common_body.dart';
 import '../../../pages/home/feed/home_feed_controller.dart';
 import '../../../pages/home/home_page.dart' show TabType;
 import '../../../pages/home/return_top_controller.dart';
-import '../../../utils/global_data.dart';
 import '../../../utils/storage_util.dart';
 import '../../../utils/utils.dart';
-import '../../feed/reply/reply_page.dart';
 
 class HomeFeedPage extends StatefulWidget {
   const HomeFeedPage({
@@ -25,13 +21,9 @@ class HomeFeedPage extends StatefulWidget {
 }
 
 class _HomeFeedPageState extends State<HomeFeedPage>
-    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-
-  late final bool isLogin = GlobalData().isLogin;
-  AnimationController? _fabAnimationCtr;
-  late bool _isFabVisible = true;
 
   late final followType = GStorage.followType;
 
@@ -60,7 +52,6 @@ class _HomeFeedPageState extends State<HomeFeedPage>
   void dispose() {
     _homeFeedController.scrollController?.removeListener(() {});
     _homeFeedController.scrollController?.dispose();
-    _fabAnimationCtr?.dispose();
     Get.delete<HomeFeedController>(
       tag: widget.tabType.name,
     );
@@ -82,68 +73,12 @@ class _HomeFeedPageState extends State<HomeFeedPage>
       }
     });
 
-    if (isLogin) {
-      _fabAnimationCtr = AnimationController(
-          vsync: this, duration: const Duration(milliseconds: 300));
-      _fabAnimationCtr?.forward();
-      _homeFeedController.scrollController?.addListener(() {
-        final ScrollDirection? direction =
-            _homeFeedController.scrollController?.position.userScrollDirection;
-        if (direction == ScrollDirection.forward) {
-          _showFab();
-        } else if (direction == ScrollDirection.reverse) {
-          _hideFab();
-        }
-      });
-    }
-  }
-
-  void _showFab() {
-    if (!_isFabVisible) {
-      _isFabVisible = true;
-      _fabAnimationCtr?.forward();
-    }
-  }
-
-  void _hideFab() {
-    if (_isFabVisible) {
-      _isFabVisible = false;
-      _fabAnimationCtr?.reverse();
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      floatingActionButton:
-          GlobalData().isLogin && widget.tabType == TabType.FEED
-              ? SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(0, 2),
-                    end: const Offset(0, 0),
-                  ).animate(CurvedAnimation(
-                    parent: _fabAnimationCtr!,
-                    curve: Curves.easeInOut,
-                  )),
-                  child: FloatingActionButton(
-                    heroTag: null,
-                    onPressed: () {
-                      Get.to(
-                        () => const ReplyPage(),
-                        transition: Transition.native,
-                      );
-                      // showModalBottomSheet<dynamic>(
-                      //   context: context,
-                      //   isScrollControlled: true,
-                      //   builder: (context) => const ReplyDialog(),
-                      // );
-                    },
-                    tooltip: 'Create Feed',
-                    child: const Icon(Icons.add),
-                  ),
-                )
-              : null,
       body: commonBody(_homeFeedController),
     );
   }

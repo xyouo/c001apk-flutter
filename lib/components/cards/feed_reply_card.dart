@@ -22,7 +22,6 @@ class FeedReplyCard extends StatelessWidget {
     this.isTopReply = false,
     this.uid,
     this.onBlock,
-    this.onReply,
     this.onDelete,
     this.onLike,
   });
@@ -32,7 +31,6 @@ class FeedReplyCard extends StatelessWidget {
   final bool isTopReply;
   final dynamic uid;
   final Function(dynamic uid, dynamic id)? onBlock;
-  final Function(dynamic id, dynamic uname, dynamic fid)? onReply;
   final Function(dynamic id, dynamic fid)? onDelete;
   final Function(dynamic id, dynamic like)? onLike;
 
@@ -46,17 +44,7 @@ class FeedReplyCard extends StatelessWidget {
       borderRadius:
           !isFeedReply ? const BorderRadius.all(Radius.circular(12)) : null,
       child: InkWell(
-        onTap: () {
-          if (isFeedReply && onReply != null) {
-            onReply!(
-              data.id,
-              data.userInfo?.username,
-              null,
-            );
-          } else {
-            Utils.onOpenLink(data.url ?? '');
-          }
-        },
+        onTap: () => Utils.onOpenLink(data.url ?? ''),
         onLongPress: () {
           Get.toNamed('/copy', parameters: {'text': data.message.toString()});
         },
@@ -282,15 +270,6 @@ class FeedReplyCard extends StatelessWidget {
 
   Widget _replyRowsItem(BuildContext context, Datum reply) {
     return InkWell(
-      onTap: () {
-        if (onReply != null) {
-          onReply!(
-            reply.id,
-            reply.userInfo?.username,
-            data.id,
-          );
-        }
-      },
       onLongPress: () {
         showModalBottomSheet(
           context: context,

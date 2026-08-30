@@ -176,24 +176,6 @@ class FeedController extends CommonController {
         .toList();
   }
 
-  void updateReply(bool isReply, Datum data, dynamic id, dynamic fid) {
-    List<Datum> replyList = loadingState.value is Success
-        ? (loadingState.value as Success).response
-        : [];
-    if (isReply) {
-      replyList = replyList.map((reply) {
-        if (reply.id == (fid ?? id)) {
-          return reply..replyRows = (reply.replyRows ?? []) + [data];
-        } else {
-          return reply;
-        }
-      }).toList();
-    } else {
-      replyList.insert(topReply == null ? 0 : 1, data);
-    }
-    loadingState.value = LoadingState.success(replyList);
-  }
-
   @override
   bool handleLike(dynamic like, dynamic likenum) {
     Datum data = (feedState.value as Success).response;

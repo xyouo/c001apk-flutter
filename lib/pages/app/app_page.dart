@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart' hide Response;
-import 'package:get/get_navigation/src/dialog/dialog_route.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../components/cards/app_info_card.dart';
@@ -17,7 +16,6 @@ import '../../utils/extensions.dart';
 import '../../utils/global_data.dart';
 import '../../utils/storage_util.dart';
 import '../../utils/utils.dart';
-import '../feed/reply/reply_page.dart';
 
 // ignore: constant_identifier_names
 enum AppMenuItem { Copy, Share, Follow, Block }
@@ -119,39 +117,6 @@ class _AppPageState extends State<AppPage> with TickerProviderStateMixin {
         });
       },
       builder: (controller) => Scaffold(
-        floatingActionButton: Obx(
-          () => controller.appState.value is Success &&
-                  GlobalData().isLogin &&
-                  !controller.isBlocked &&
-                  controller.commentStatus == 1
-              ? FloatingActionButton(
-                  heroTag: null,
-                  onPressed: () {
-                    Get.to(
-                      () => ReplyPage(
-                        title: controller.appName,
-                        targetType: 'apk',
-                        targetId:
-                            '${1000000000 + int.parse(controller.id ?? '4599')}',
-                      ),
-                      transition: Transition.native,
-                    );
-                    // showModalBottomSheet<dynamic>(
-                    //   context: context,
-                    //   isScrollControlled: true,
-                    //   builder: (context) => ReplyDialog(
-                    //     title: controller.appName,
-                    //     targetType: 'apk',
-                    //     targetId:
-                    //         '${1000000000 + int.parse(controller.id ?? '4599')}',
-                    //   ),
-                    // );
-                  },
-                  tooltip: 'Create Feed',
-                  child: const Icon(Icons.add),
-                )
-              : const SizedBox(),
-        ),
         appBar: PreferredSize(
           preferredSize: const Size(double.infinity, 56),
           child: Obx(

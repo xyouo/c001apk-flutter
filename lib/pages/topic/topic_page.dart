@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/src/dialog/dialog_route.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../logic/state/loading_state.dart';
 import '../../pages/home/return_top_controller.dart';
-import '../../pages/feed/reply/reply_page.dart';
 import '../../pages/topic/topic_content.dart';
 import '../../pages/topic/topic_controller.dart';
 import '../../pages/topic/topic_order_controller.dart';
@@ -116,38 +114,6 @@ class _TopicPageState extends State<TopicPage> with TickerProviderStateMixin {
     return Obx(
       () => _topicController.topicState.value is Success
           ? Scaffold(
-              floatingActionButton: GlobalData().isLogin &&
-                      !_topicController.isBlocked
-                  ? FloatingActionButton(
-                      heroTag: null,
-                      onPressed: () {
-                        Get.to(
-                          () => ReplyPage(
-                            targetType:
-                                _topicController.entityType == 'topic'
-                                    ? 'tag'
-                                    : 'product_phone',
-                            targetId: _topicController.id,
-                            title: _topicController.title,
-                          ),
-                          transition: Transition.native,
-                        );
-                        // showModalBottomSheet<dynamic>(
-                        //   context: context,
-                        //   isScrollControlled: true,
-                        //   builder: (context) => ReplyDialog(
-                        //     targetType: _topicController.entityType == 'topic'
-                        //         ? 'tag'
-                        //         : 'product_phone',
-                        //     targetId: _topicController.id,
-                        //     title: _topicController.title,
-                        //   ),
-                        // );
-                      },
-                      tooltip: 'Create Feed',
-                      child: const Icon(Icons.add),
-                    )
-                  : null,
               appBar: AppBar(
                 title: Text(
                   _topicController.title!,

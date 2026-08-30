@@ -1,15 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/src/dialog/dialog_route.dart';
 
 import '../../../components/common_body.dart';
 import '../../../logic/model/feed/datum.dart';
 import '../../../logic/state/loading_state.dart';
-import '../../../pages/feed/reply/reply_dialog.dart' show ReplyType;
-import '../../../pages/feed/reply/reply_page.dart';
 import '../../../pages/feed/reply2reply/reply_2_reply_controller.dart';
-import '../../../utils/global_data.dart';
 
 class Reply2ReplyPage extends StatelessWidget {
   const Reply2ReplyPage({
@@ -51,33 +47,6 @@ class Reply2ReplyPage extends StatelessWidget {
                     controller,
                     isReply2Reply: true,
                     uid: originReply.uid,
-                    onReply: (id, uname, fid) async {
-                      if (GlobalData().isLogin) {
-                        final result = await Get.to<dynamic>(
-                          () => ReplyPage(
-                            type: ReplyType.reply,
-                            username: uname,
-                            id: id,
-                          ),
-                          transition: Transition.native,
-                        );
-                        if (result != null && result['data'] != null) {
-                          controller.updateReply(result['data'] as Datum, id);
-                        }
-                        // dynamic result = await showModalBottomSheet<dynamic>(
-                        //   context: context,
-                        //   isScrollControlled: true,
-                        //   builder: (context) => ReplyDialog(
-                        //     type: ReplyType.reply,
-                        //     username: uname,
-                        //     id: id,
-                        //   ),
-                        // );
-                        // if (result != null && result['data'] != null) {
-                        //   controller.updateReply(result['data'] as Datum, id);
-                        // }
-                      }
-                    },
                   )
                 : Center(
                     child: buildBody(
