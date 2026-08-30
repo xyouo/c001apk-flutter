@@ -20,7 +20,7 @@ import '../../logic/model/oss_upload/datum.dart';
 import '../../logic/model/oss_upload/oss_upload_model.dart';
 import '../../logic/state/loading_state.dart';
 import '../../pages/chat/chat_controller.dart';
-import '../../pages/feed/reply/emoji_panel.dart';
+import '../../components/emoji_panel.dart';
 import '../../utils/device_util.dart';
 import '../../utils/extensions.dart';
 import '../../utils/global_data.dart';

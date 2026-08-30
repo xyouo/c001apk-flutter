@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../utils/emoji_util.dart';
+import '../utils/emoji_util.dart';
 
 class EmotePanel extends StatelessWidget {
   const EmotePanel({
@@ -8,6 +8,7 @@ class EmotePanel extends StatelessWidget {
     required this.index,
     required this.onClick,
   });
+
   final int index;
   final Function(String emoji) onClick;
 

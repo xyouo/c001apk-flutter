@@ -27,7 +27,6 @@ Widget itemCard(
   bool isTopReply = false,
   dynamic uid,
   Function(dynamic uid)? onBlock,
-  Function(dynamic id, dynamic uname, dynamic fid)? onReply,
   Function(dynamic id, dynamic fid, {bool isFeed, bool isReply, bool isNoti})?
       onDelete,
   Function(dynamic id)? onDeleteNoti,
@@ -86,7 +85,6 @@ Widget itemCard(
           isTopReply: isTopReply,
           uid: uid,
           onBlock: onBlock != null ? (uid, id) => onBlock(uid) : null,
-          onReply: onReply,
           onDelete: (id, fid) {
             if (onDelete != null) {
               onDelete(id, fid, isReply: true);

@@ -2,10 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/src/dialog/dialog_route.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../components/cards/feed_reply_card.dart';
@@ -16,8 +14,6 @@ import '../../components/cards/feed_card.dart';
 import '../../logic/model/feed/datum.dart';
 import '../../logic/state/loading_state.dart';
 import '../../pages/feed/feed_controller.dart';
-import '../../pages/feed/reply/reply_dialog.dart' show ReplyType;
-import '../../pages/feed/reply/reply_page.dart';
 import '../../utils/device_util.dart';
 import '../../utils/extensions.dart';
 import '../../utils/global_data.dart';
@@ -36,54 +32,18 @@ class FeedPage extends StatefulWidget {
   State<FeedPage> createState() => _FeedPageState();
 }
 
-class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
+class _FeedPageState extends State<FeedPage> {
   final String _id = Get.parameters['id'].orEmpty;
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
-  AnimationController? _fabAnimationCtr;
-  late bool _isFabVisible = true;
   late final _scrollController = ScrollController();
   late final StreamController<bool> _titleStreamC = StreamController<bool>();
   late bool _visibleTitle = false;
-
-  @override
-  void initState() {
-    super.initState();
-    if (GlobalData().isLogin) {
-      _fabAnimationCtr = AnimationController(
-          vsync: this, duration: const Duration(milliseconds: 300));
-      _fabAnimationCtr?.forward();
-      _scrollController.addListener(() {
-        final ScrollDirection direction =
-            _scrollController.position.userScrollDirection;
-        if (direction == ScrollDirection.forward) {
-          _showFab();
-        } else if (direction == ScrollDirection.reverse) {
-          _hideFab();
-        }
-      });
-    }
-  }
-
-  void _showFab() {
-    if (!_isFabVisible) {
-      _isFabVisible = true;
-      _fabAnimationCtr?.forward();
-    }
-  }
-
-  void _hideFab() {
-    if (_isFabVisible) {
-      _isFabVisible = false;
-      _fabAnimationCtr?.reverse();
-    }
-  }
 
   @override
   void dispose() {
     _titleStreamC.close();
     _scrollController.removeListener(() {});
     _scrollController.dispose();
-    _fabAnimationCtr?.dispose();
     Get.delete<FeedController>(tag: _id + _random);
     super.dispose();
   }
@@ -265,48 +225,6 @@ class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
     );
   }
 
-  Future<void> _onReply(
-    ReplyType type,
-    dynamic id,
-    dynamic uname,
-    dynamic fid,
-  ) async {
-    final result = await Get.to<dynamic>(
-      () => ReplyPage(
-        type: type,
-        username: uname,
-        id: id,
-      ),
-      transition: Transition.native,
-    );
-    if (result != null && result['data'] != null) {
-      _feedController.updateReply(
-        type == ReplyType.reply,
-        result['data'] as Datum,
-        id,
-        fid,
-      );
-    }
-
-    // dynamic result = await showModalBottomSheet<dynamic>(
-    //   context: context,
-    //   isScrollControlled: true,
-    //   builder: (context) => ReplyDialog(
-    //     type: type,
-    //     username: uname,
-    //     id: id,
-    //   ),
-    // );
-    // if (result != null && result['data'] != null) {
-    //   _feedController.updateReply(
-    //     type == ReplyType.reply,
-    //     result['data'] as Datum,
-    //     id,
-    //     fid,
-    //   );
-    // }
-  }
-
   Widget _buildFeedReply(LoadingState replyState) {
     switch (replyState) {
       case Empty():
@@ -366,11 +284,6 @@ class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
                       index == 0 &&
                       _feedController.listType == 'lastupdate_desc',
                   onBlock: _feedController.onBlockReply,
-                  onReply: (id, uname, fid) {
-                    if (GlobalData().isLogin) {
-                      _onReply(ReplyType.reply, id, uname, fid);
-                    }
-                  },
                   onDelete: (id, fid) {
                     _feedController.postLikeDeleteFollow(id, fid,
                         isReply: true);
@@ -398,32 +311,6 @@ class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: Obx(
-        () => _feedController.feedState.value is Success && GlobalData().isLogin
-            ? SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0, 2),
-                  end: const Offset(0, 0),
-                ).animate(CurvedAnimation(
-                  parent: _fabAnimationCtr!,
-                  curve: Curves.easeInOut,
-                )),
-                child: FloatingActionButton(
-                  heroTag: null,
-                  tooltip: 'Reply',
-                  onPressed: () {
-                    _onReply(
-                      ReplyType.feed,
-                      _feedController.id,
-                      _feedController.feedUsername,
-                      null,
-                    );
-                  },
-                  child: const Icon(Icons.reply),
-                ),
-              )
-            : const SizedBox(),
-      ),
       appBar: PreferredSize(
         preferredSize: const Size(double.infinity, 56),
         child: Obx(
