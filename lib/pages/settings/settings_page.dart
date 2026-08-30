@@ -27,9 +27,6 @@ enum SettingsMenuItem { Feedback, About }
 // ignore: constant_identifier_names
 enum FollowType { ALL, USER, TOPIC, PRODUCT, APP }
 
-// ignore: constant_identifier_names
-enum ImageQuality { AUTO, ORIGIN, THUMBNAIL }
-
 String settingsMenuLabel(SettingsMenuItem item) => switch (item) {
       SettingsMenuItem.Feedback => '反馈',
       SettingsMenuItem.About => '关于',
@@ -211,39 +208,12 @@ class _SettingsPageState extends State<SettingsPage>
                     ))
                 .toList(),
           ),
-          /*
-          DropDownMenuItem(
-            icon: Icons.image_outlined,
-            title: 'Image Quality',
-            boxKey: SettingsBoxKey.imageQuality,
-            items: ImageQuality.values
-                .map((type) => DropdownMenuItem<int>(
-                      value: ImageQuality.values.indexOf(type),
-                      child: Text(type.name),
-                    ))
-                .toList(),
-          ),
-          const SwitchItem(
-            icon: Icons.image_outlined,
-            title: 'Image Dim',
-            boxKey: SettingsBoxKey.imageDim,
-            defaultValue: true,
-          ),
-          */
           const SwitchItem(
             icon: Icons.travel_explore,
             title: '在浏览器中打开',
             boxKey: SettingsBoxKey.openInBrowser,
             defaultValue: false,
           ),
-          /*
-          const SwitchItem(
-            icon: Icons.feed_outlined,
-            title: 'Show Square',
-            boxKey: SettingsBoxKey.showSquare,
-            defaultValue: true,
-          ),
-          */
           const SwitchItem(
             icon: Icons.history,
             title: '记录历史',

@@ -19,7 +19,6 @@ import '../pages/others/imageview_page.dart';
 import '../pages/search/search_page.dart';
 import '../pages/search/search_result_page.dart';
 import '../pages/settings/about_page.dart';
-import '../pages/settings/params_page.dart';
 import '../pages/topic/topic_page.dart';
 import '../pages/user/user_page.dart';
 import '../pages/webview/webview_page.dart';
@@ -40,10 +39,6 @@ class AppPages {
     _getPage(
       name: '/',
       page: () => const MainPage(),
-    ),
-    _getPage(
-      name: '/params',
-      page: () => const ParamsPage(),
     ),
     _getPage(
       name: '/about',

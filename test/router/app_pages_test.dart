@@ -9,4 +9,11 @@ void main() {
       expect(page.customTransition, isNull, reason: page.name);
     }
   });
+
+  test('removed parameter editor is not routable', () {
+    expect(
+      AppPages.getPages.map((page) => page.name),
+      isNot(contains('/params')),
+    );
+  });
 }
