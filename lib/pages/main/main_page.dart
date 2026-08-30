@@ -136,23 +136,23 @@ class _MainPageState extends State<MainPage> {
             bottomNavigationBar: isPortait
                 ? SafeArea(
                     top: false,
-                    minimum: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+                    minimum: const EdgeInsets.fromLTRB(32, 0, 32, 8),
                     child: Align(
                       heightFactor: 1,
                       child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 360),
+                        constraints: const BoxConstraints(maxWidth: 320),
                         child: Material(
                           elevation: 6,
                           surfaceTintColor: Colors.transparent,
-                          borderRadius: BorderRadius.circular(28),
+                          borderRadius: BorderRadius.circular(26),
                           clipBehavior: Clip.antiAlias,
                           child: NavigationBar(
-                            height: 64,
+                            height: 58,
                             destinations: barDestinations,
                             selectedIndex: _selectedIndex,
                             onDestinationSelected: onDestinationSelected,
-                            labelBehavior: NavigationDestinationLabelBehavior
-                                .onlyShowSelected,
+                            labelBehavior:
+                                NavigationDestinationLabelBehavior.alwaysShow,
                           ),
                         ),
                       ),
