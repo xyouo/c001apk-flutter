@@ -49,17 +49,21 @@ class _SettingsPageState extends State<SettingsPage>
   bool get wantKeepAlive => true;
 
   late final _settingsController = Get.put(SettingsController());
-  String _version = '1.0.0(1)';
+  String? _version;
+  late final Future<void> _versionReady;
 
-  void _getVersionInfo() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    _version = '${packageInfo.version}(${packageInfo.buildNumber})';
+  Future<void> _getVersionInfo() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    if (!mounted) return;
+    setState(() {
+      _version = '${packageInfo.version}(${packageInfo.buildNumber})';
+    });
   }
 
   @override
   void initState() {
     super.initState();
-    _getVersionInfo();
+    _versionReady = _getVersionInfo();
   }
 
   @override
@@ -76,16 +80,18 @@ class _SettingsPageState extends State<SettingsPage>
         title: const Text('设置'),
         actions: [
           PopupMenuButton(
-            onSelected: (SettingsMenuItem item) {
+            onSelected: (SettingsMenuItem item) async {
               switch (item) {
                 case SettingsMenuItem.Feedback:
                   Utils.launchURL(Constants.URL_SOURCE_CODE);
                   break;
                 case SettingsMenuItem.About:
+                  await _versionReady;
+                  if (!context.mounted) return;
                   showDialog<void>(
                     context: context,
                     builder: (context) {
-                      return MAboutDialog(version: _version);
+                      return MAboutDialog(version: _version ?? '');
                     },
                   );
                   break;
@@ -268,10 +274,14 @@ class _SettingsPageState extends State<SettingsPage>
           ),
           ListTile(
             title: const Text('关于'),
-            subtitle: Text(_version),
+            subtitle: _version == null ? null : Text(_version!),
             leading: const Icon(Icons.all_inclusive),
-            onTap: () =>
-                Get.toNamed('/about', parameters: {'version': _version}),
+            onTap: () async {
+              await _versionReady;
+              if (_version != null) {
+                Get.toNamed('/about', parameters: {'version': _version!});
+              }
+            },
           ),
           Obx(
             () => ListTile(
