@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:android_intent_plus/android_intent.dart';
@@ -34,15 +35,15 @@ class _MainPageState extends State<MainPage> {
   }
 
   @override
-  void dispose() async {
+  void dispose() {
     _pageController.dispose();
-    await GStorage.close();
+    unawaited(GStorage.close());
     Get.delete<ReturnTopController>(tag: 'home');
     Get.delete<MainController>();
     super.dispose();
   }
 
-  void onBackPressed() async {
+  Future<void> onBackPressed() async {
     if (_selectedIndex != 0) {
       onDestinationSelected(0);
     } else {
