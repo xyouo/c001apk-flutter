@@ -144,10 +144,10 @@ class _MainPageState extends State<MainPage> {
                         child: Material(
                           elevation: 6,
                           surfaceTintColor: Colors.transparent,
-                          borderRadius: BorderRadius.circular(24),
+                          borderRadius: BorderRadius.circular(28),
                           clipBehavior: Clip.antiAlias,
                           child: NavigationBar(
-                            height: 56,
+                            height: 64,
                             destinations: barDestinations,
                             selectedIndex: _selectedIndex,
                             onDestinationSelected: onDestinationSelected,
