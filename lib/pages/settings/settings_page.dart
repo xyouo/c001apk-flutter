@@ -7,8 +7,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../components/dialog.dart';
 import '../../components/settings/drop_down_menu_item.dart';
-import '../../components/settings/edittext_item.dart';
-import '../../components/settings/item_title.dart';
 import '../../components/settings/switch_item.dart';
 import '../../constants/constants.dart';
 import '../../pages/blacklist/black_list_page.dart' show BlackListType;
@@ -107,18 +105,6 @@ class _SettingsPageState extends State<SettingsPage>
           parent: BouncingScrollPhysics(),
         ),
         children: [
-          const ItemTitle(title: Constants.APP_NAME),
-          const EdittextItem(
-            icon: Icons.smartphone,
-            title: 'SZLM ID',
-            boxKey: SettingsBoxKey.szlmId,
-            needUpdateXAppDevice: true,
-          ),
-          ListTile(
-            leading: const Icon(Icons.developer_mode),
-            title: const Text('参数'),
-            onTap: () => Get.toNamed('/params'),
-          ),
           // Theme
           ListTile(
             title: Text(

@@ -271,44 +271,22 @@ class _FeedPageState extends State<FeedPage> with TickerProviderStateMixin {
     dynamic uname,
     dynamic fid,
   ) async {
-    Navigator.of(context)
-        .push(
-      GetDialogRoute(
-        pageBuilder: (buildContext, animation, secondaryAnimation) {
-          return ReplyPage(
-            type: type,
-            username: uname,
-            id: id,
-          );
-        },
-        transitionDuration: const Duration(milliseconds: 500),
-        transitionBuilder: (context, animation, secondaryAnimation, child) {
-          const begin = Offset(0.0, 1.0);
-          const end = Offset.zero;
-          const curve = Curves.linear;
-
-          var tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-          return SlideTransition(
-            position: animation.drive(tween),
-            child: child,
-          );
-        },
+    final result = await Get.to<dynamic>(
+      () => ReplyPage(
+        type: type,
+        username: uname,
+        id: id,
       ),
-    )
-        .then(
-      (result) {
-        if (result != null && result['data'] != null) {
-          _feedController.updateReply(
-            type == ReplyType.reply,
-            result['data'] as Datum,
-            id,
-            fid,
-          );
-        }
-      },
+      transition: Transition.native,
     );
+    if (result != null && result['data'] != null) {
+      _feedController.updateReply(
+        type == ReplyType.reply,
+        result['data'] as Datum,
+        id,
+        fid,
+      );
+    }
 
     // dynamic result = await showModalBottomSheet<dynamic>(
     //   context: context,
