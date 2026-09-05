@@ -18,7 +18,7 @@ samples, guidance on mobile development, and a full API reference.
 ## Credits:
 - [pilipala](https://github.com/guozhigq/pilipala)
 
-## Building an unsigned iOS IPA
+## Building an iOS IPA
 
 The iOS app targets iOS 15 or later. A macOS host with Flutter 3.44.7 and
 Xcode 26 is required.
@@ -37,11 +37,11 @@ xcodebuild archive \
   -destination 'generic/platform=iOS' \
   -archivePath build/ios/archive/Runner.xcarchive \
   CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=
-./scripts/package_unsigned_ipa.sh
+./scripts/package_ipa.sh
 ```
 
 The resulting file is written to
-`build/ios/ipa/c001apk-flutter.ipa`. It is an unsigned development
+`build/ios/ipa/c001apk-flutter.ipa`. It is a development
 artifact, not an App Store package, and must be signed before installation on
-a physical device. The same build is available from the GitHub Actions run as
-the `ios-ipa` artifact.
+a physical device. On every push to `main`, the build is uploaded to GitHub
+Actions as the `ios-ipa` artifact and attached to a `ci-<commit-sha>` Release.

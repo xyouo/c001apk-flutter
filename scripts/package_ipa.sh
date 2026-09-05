@@ -31,7 +31,7 @@ if [[ -e "${app}/embedded.mobileprovision" ]]; then
   exit 1
 fi
 if codesign --verify --deep --strict "${app}" >/dev/null 2>&1; then
-  echo "Built app is signed; refusing to label it as an unsigned IPA." >&2
+  echo "Built app is signed; cannot package it as a plain IPA." >&2
   exit 1
 fi
 
