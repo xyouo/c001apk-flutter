@@ -88,6 +88,22 @@ jobs:
       - name: Package IPA
         run: bash scripts/package_ipa.sh
 
+      - name: Compute next release version
+        id: release-version
+        run: |
+          set -eo pipefail
+          base=$(sed -n 's/^version: \([0-9]*\.[0-9]*\.[0-9]*\).*/\1/p' pubspec.yaml | head -n1)
+          if [ -z "$base" ]; then base="1.0.0"; fi
+          try=$base
+          while git rev-parse -q --verify "refs/tags/v${try}" >/dev/null 2>&1; do
+            major=${try%%.*}; rest=${try#*.}; minor=${rest%%.*}; patch=${rest##*.}
+            patch=$((patch+1))
+            try="${major}.${minor}.${patch}"
+          done
+          echo "base=${base}"
+          echo "version=${try}"
+          echo "version=${try}" >> "$GITHUB_OUTPUT"
+
       - name: Upload IPA artifact
         # actions/upload-artifact v7.0.1
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
@@ -102,7 +118,7 @@ jobs:
         uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64
         if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
         with:
-          tag_name: ci-${{ github.sha }}
-          name: "iOS build ${{ github.sha }}"
+          tag_name: v${{ steps.release-version.outputs.version }}
+          name: "${{ steps.release-version.outputs.version }}"
           files: build/ios/ipa/c001apk-flutter.ipa
           generate_release_notes: true
