@@ -124,7 +124,7 @@ class _MainPageState extends State<MainPage> {
               Expanded(
                 child: PageView(
                   controller: _pageController,
-                  physics: const BouncingScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   onPageChanged: (index) {
                     if (index != _selectedIndex) {
                       setState(() => _selectedIndex = index);
