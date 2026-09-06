@@ -57,7 +57,16 @@ class _MessagePageState extends State<MessagePage>
   void initState() {
     super.initState();
     if (GlobalData().isLogin) {
-      _onRefresh();
+      // Defer the initial network work until after the first frame so it does
+      // not compete with the PageView tab-switch animation when this page is
+      // first built. Without this, entering the Messages tab right after
+      // switching can visibly stutter while the profile/count/list requests
+      // fire on the animation frames.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          _onRefresh();
+        }
+      });
     }
   }
 

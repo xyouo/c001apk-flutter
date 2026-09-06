@@ -2,16 +2,23 @@ import 'dart:convert';
 
 import '../model/feed_article/feed_article.dart';
 
-const _structuredFeedTypes = {'feedArticle', 'trade'};
-
-/// Selects the structured renderer only for feed types that actually use it.
-/// Ordinary feeds may still return `message_raw_output`, including `[]`, but
-/// their visible body lives in the `message` and `picArr` fields.
+/// Selects the structured renderer for the feed detail body.
+///
+/// The structured body lives in `message_raw_output` and is returned by the
+/// feed detail endpoint for many feed kinds (article, topic, digital, app,
+/// etc.), not just a narrow set of `feedType` values. We therefore attempt the
+/// structured parse for any non-empty/non-"null" payload and fall back to the
+/// regular body only when parsing yields nothing. `parseFeedArticleBody`
+/// already returns null for malformed/empty payloads, so an unconditional call
+/// is both safe and strictly more complete than gating on a feed-type
+/// whitelist.
 List<FeedArticle>? parseStructuredFeedBody({
   required String? feedType,
   required String? rawBody,
 }) {
-  if (!_structuredFeedTypes.contains(feedType)) {
+  if (rawBody == null ||
+      rawBody.trim().isEmpty ||
+      rawBody.trim() == 'null') {
     return null;
   }
   return parseFeedArticleBody(rawBody);

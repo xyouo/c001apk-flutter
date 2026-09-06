@@ -125,6 +125,11 @@ class _MainPageState extends State<MainPage> {
                 child: PageView(
                   controller: _pageController,
                   physics: const NeverScrollableScrollPhysics(),
+                  // Pre-build adjacent pages so switching tabs does not lazily
+                  // construct the target page during its 300ms animation (the
+                  // cause of the one-way stutter when entering a never-seen tab).
+                  // Building is now paid once at startup instead of on first tab.
+                  allowImplicitScrolling: true,
                   onPageChanged: (index) {
                     if (index != _selectedIndex) {
                       setState(() => _selectedIndex = index);
