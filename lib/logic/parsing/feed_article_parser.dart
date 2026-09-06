@@ -4,18 +4,22 @@ import '../model/feed_article/feed_article.dart';
 
 /// Selects the structured renderer for the feed detail body.
 ///
-/// The structured body lives in `message_raw_output` and is returned by the
-/// feed detail endpoint for many feed kinds (article, topic, digital, app,
-/// etc.), not just a narrow set of `feedType` values. We therefore attempt the
-/// structured parse for any non-empty/non-"null" payload and fall back to the
-/// regular body only when parsing yields nothing. `parseFeedArticleBody`
-/// already returns null for malformed/empty payloads, so an unconditional call
-/// is both safe and strictly more complete than gating on a feed-type
-/// whitelist.
+/// Ordinary dynamic feeds (`feedType == "feed"`) keep their visible body in
+/// the `message` and `picArr` fields and always use the plain layout. Every
+/// other feed kind (article, article/trade, photo, topic long-form, etc.)
+/// carries its renderable body in `message_raw_output`, so we attempt the
+/// structured parse for them whenever the payload is non-empty/non-"null".
+/// `parseFeedArticleBody` already returns null for malformed/empty payloads,
+/// so for those we fall back to the regular body safely.
 List<FeedArticle>? parseStructuredFeedBody({
   required String? feedType,
   required String? rawBody,
 }) {
+  // Plain dynamic: body lives in `message`/`picArr`, never in
+  // `message_raw_output`. Keep the regular card.
+  if (feedType == 'feed') {
+    return null;
+  }
   if (rawBody == null ||
       rawBody.trim().isEmpty ||
       rawBody.trim() == 'null') {
